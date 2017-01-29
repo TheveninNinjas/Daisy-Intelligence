@@ -374,54 +374,54 @@ def convertSquareID_to_BoardID(nextsquare, squareID):
 ########### minmax
 
 
-def choose(current_state, data):
+def choose(current_state, data): #function that determines what move the computer should generate using minimax
 		moves=[]
 	
-		moves=findValidMoves(current_state, data)
+		moves=findValidMoves(current_state, data) #generate possible moves
 		nummoves=len(moves)
 		
 		for i in range(0, nummoves):
 			temp_board=current_state
 			#print(moves[i])
 			new_state=change_state(temp_board, moves[i], 1)
-			score=YourMove(new_state, data)
-			if (score==10): return moves[i]
-			elif (score==0): nochoice=moves[i]
+			score=YourMove(new_state, data) #Evaluate oponent's possible moves if computer generates this move
+			if (score==10): return moves[i] #if computer's move generates a possible win, play this move
+			elif (score==0): nochoice=moves[i] #if no win is possible, play a 0 move (generate a tie)
 			
 		return nochoice
 		
 
-def change_state(current_state, move, player):
+def change_state(current_state, move, player): #updates the board based on a move
 	current_state[move].value=player
 	return current_state
 
 	
-def MyMove(current_state, data):
+def MyMove(current_state, data): #minimax function 1. Takes a game setting based and figures out possible results
 	
-	if isBoardFull(getBigBoard(current_state,data)) or (isBoardWon(getBigBoard(current_state,data)) != 0):
+	if isBoardFull(getBigBoard(current_state,data)) or (isBoardWon(getBigBoard(current_state,data)) != 0): #if the game is in a end state...
 		if isBoardWon(getBigBoard(current_state, data))==1:
-			return 10
+			return 10										#return max score (10) if the computer wins in this state
 		elif isBoardWon(getBigBoard(current_state, data))==2:
-			return -10
+			return -10										#return min score (-10) if opponent wins
 		else: 
-			return 0
+			return 0				#tie
 	
-	moves=[]
+	moves=[]	
 	temp_board=current_state
-	moves=findValidMoves(temp_board, data)
+	moves=findValidMoves(temp_board, data)				
 	nummoves=len(moves)
 	best=-1000
 	
 	for i in range(0, nummoves):
-		new_state=change_state(temp_board, moves[i], 1)
+		new_state=change_state(temp_board, moves[i], 1) #evaluate the result if this possible move is played
 		boardeval=YourMove(new_state, data)
 		
-		if boardeval>best:
+		if boardeval>best: #choose highest level result
 			best=boardeval
 	
 	return best
 	
-def YourMove(current_state, data):
+def YourMove(current_state, data): #predicting the opponent's move based on game state. Minimax function 2
 	
 	if isBoardFull(getBigBoard(current_state,data)) or (isBoardWon(getBigBoard(current_state,data)) != 0):
 		if isBoardWon(getBigBoard(current_state, data))==1:
@@ -445,57 +445,6 @@ def YourMove(current_state, data):
 			best=boardeval
 	
 	return best
-	
-"""	def get_move(timeout,data):
-	PLAYER=int(data[0])
-	nextsquare=int(data[1])
-	squares = []
-	for i in range(2,83): 
-		squares.append(square(i-2,int(data[i])))
-  return squares"""
-  
-time=input('Time is: ')
-starter=input('starting player is ')
-data=input('board is: ')
-data=str(data)
-
-PLAYER=int(data[0])
-nextsquare=int(data[1])
-squares = []
-for i in range(2,83): 
-  squares.append(square(i-2,int(data[i])))
-
-if starter==1:
-  iStart=True
-  
-else:
-  iStart=False
-		
-while True:
-  new_state=copy.deepcopy(squares)
-  if iStart:
-    move1=choose(new_state, nextsquare)
-    print('move 1 is ')
-    print(move1)
-    new_state=change_state(squares, move1, 1)
-    iStart=False
-    if isBoardWon(getBigBoard(squares, nextsquare))!=0 or isBoardFull(getBigBoard(squares, nextsquare)):
-      break
-    
-  else:
-    move2=input('Your move: ')
-    move2=int(move2)
-    
-    new_state=change_state(squares, move2, 2)
-    iStart=True
-    if isBoardWon(getBigBoard(squares, nextsquare))!=0 or isBoardFull(getBigBoard(squares, nextsquare)):
-      break
-	
-print("Winner is")
-if isBoardWon(getBigBoard(squares, nextsquare))==0:
-  print("There is a tie")
-else:
-  print(isBoardWon(getBigBoard(squares, nextsquare)))
 
 
 #testing function
